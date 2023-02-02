@@ -4,7 +4,7 @@ const sequelize = require('../../database');
 
 const Spotted = sequelize.define('Spotted', {
   id: {
-    type: DataTypes.UUIDV4,
+    type: Sequelize.UUID,
     defaultValue: Sequelize.UUIDV4,
     primaryKey: true
   },
@@ -27,6 +27,14 @@ const Spotted = sequelize.define('Spotted', {
     allowNull: true,
     defaultValue: 0
   },
+  text: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
+  image: {
+    type: DataTypes.BLOB,
+    allowNull: true
+  }
 });
 
 module.exports = Spotted;
