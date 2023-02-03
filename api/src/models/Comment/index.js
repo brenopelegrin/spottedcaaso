@@ -2,11 +2,19 @@ const { Sequelize, Model, DataTypes } = require('sequelize');
 
 const sequelize = require('../../database');
 
-const Spotted = sequelize.define('Spotted', {
+const Comment = sequelize.define('Comment', {
   id: {
-    type: Sequelize.UUID,
+    type: Sequelize.STRING,
     defaultValue: Sequelize.UUIDV4,
     primaryKey: true
+  },
+  spotted_id: {
+    type: Sequelize.UUID,
+    allowNull: false
+  },
+  author_id: {
+    type: Sequelize.UUID,
+    allowNull: true
   },
   likes: {
     type: DataTypes.INTEGER,
@@ -18,19 +26,10 @@ const Spotted = sequelize.define('Spotted', {
     allowNull: true,
     defaultValue: 0
   },
-  comments: {
-    type: DataTypes.INTEGER,
-    allowNull: true,
-    defaultValue: 0
-  },
   text: {
     type: DataTypes.STRING,
     allowNull: true
   },
-  image: {
-    type: DataTypes.BLOB,
-    allowNull: true
-  }
 });
 
-module.exports = Spotted;
+module.exports = Comment;
