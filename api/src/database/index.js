@@ -1,6 +1,6 @@
 const { Sequelize, Model, DataTypes } = require('sequelize');
-
-const sequelize = new Sequelize('postgres://postgres:123@localhost:5432/spotted');
+const databaseURI = process.env.DATABASE_URI;
+const sequelize = new Sequelize(databaseURI);
 
 async function initializeDatabase(){
     try {
