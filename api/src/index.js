@@ -29,4 +29,5 @@ require('./controllers/authController')(globalRouter);
 require('./protected/protectedRoutes')(globalRouter);
 
 app.listen(process.env.PORT || 3000);
-console.log(`server started listening on port ${port}.`)
+console.log(`server started listening on port ${port}.`);
+module.exports = app;
