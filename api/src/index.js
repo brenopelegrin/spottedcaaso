@@ -5,7 +5,6 @@ const cors = require('cors');
 // defining the Express app
 
 const app = express('/api');
-const port = 3000;
 
 const globalRouter = express.Router();
 
@@ -29,5 +28,5 @@ Spotted.sync();
 require('./controllers/authController')(globalRouter);
 require('./protected/protectedRoutes')(globalRouter);
 
-app.listen(port);
+app.listen(process.env.PORT || 3000);
 console.log(`server started listening on port ${port}.`)
