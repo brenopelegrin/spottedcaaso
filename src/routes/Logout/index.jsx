@@ -22,14 +22,31 @@ import { CheckCircleIcon } from '@chakra-ui/icons';
 import { Link as RouteLink, useNavigate } from 'react-router-dom';
 
 import { useAuth } from '../../contexts/AuthContext';
+
+import { useState } from 'react';
   
 export default function LogoutPage() {
   const { signed, Logout } = useAuth();
   const navigate = useNavigate();
+  const [infoBox, setInfoBox] = useState(<></>);
+
+  const infoBoxComponent = ({status, message}) => {
+    return(
+      <Alert status={status}>
+        <AlertIcon />
+        <AlertDescription>{message}</AlertDescription>
+      </Alert>
+    )
+  }
+
   const handleLogout = async () => {
+    setInfoBox(infoBoxComponent({status: 'info', message: 'Aguardando o servidor...'}))
     await Logout();
     navigate('/');
   }
+
+  
+
   return (
     <Flex
       minH={'80vh'}
@@ -38,6 +55,7 @@ export default function LogoutPage() {
       bg={useColorModeValue('gray.50', 'gray.800')}>
       <Stack spacing={8} mx={'auto'} maxW={'lg'} py={12} px={6}>
         <Stack align={'center'}>
+          {infoBox}
           <Heading fontSize={'4xl'} pb={4}>
             <Stack align={'center'} flexDirection='row' gap={4}>
                 <CheckCircleIcon/>

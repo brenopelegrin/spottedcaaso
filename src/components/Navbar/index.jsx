@@ -28,6 +28,9 @@ import {
   ModalFooter,
   ModalBody,
   ModalCloseButton,
+  Alert,
+  AlertIcon,
+  AlertDescription,
   Hide
 } from '@chakra-ui/react';
 
@@ -73,10 +76,23 @@ export default function Navbar() {
   const { isOpen: isCreatorOpen, onOpen: onCreatorOpen, onClose: onCreatorClose } = useDisclosure();
   const [spottedText, setSpottedText] = useState('');
   const [spottedAnonymous, setSpottedAnonymous] = useState(false);
+  const [infoBox, setInfoBox] = useState(<></>);
 
-  const handleSpottedSubmit = async (spottedText, spottedAnonymous) => {
+  const waitingServer = () => {
+    return(
+      <Alert status='info' width='sm'>
+        <AlertIcon/>
+        <AlertDescription>
+            Aguardando o servidor...
+        </AlertDescription>
+      </Alert>
+    )
+  }
+
+  async function handleSpottedSubmit(spottedText, spottedAnonymous){
     console.log({text: spottedText, is_anon: spottedAnonymous})
     var response = {}
+    setInfoBox(waitingServer())
     if(spottedAnonymous){
       response = await postAnonymousSpotted({ text: spottedText })
     } else{
@@ -85,7 +101,6 @@ export default function Navbar() {
     
     if(response.status == 200){
       onCreatorClose()
-      window.location.reload(false)
     }
     console.log(response)
   }
@@ -226,6 +241,7 @@ export default function Navbar() {
           <ModalHeader bg={useColorModeValue('yellow.200', 'yellow.600')}>Criar novo Spotted <ModalCloseButton /></ModalHeader>
           <ModalBody>
             <Flex flexDirection="column" gap={4} pt={4}>
+              {infoBox}
               <FormControl isRequired id="text">
                 <Textarea 
                   placeholder='Digite aqui algo bem curioso...' 

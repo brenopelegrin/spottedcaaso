@@ -41,6 +41,7 @@ export default function SignUpPage() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     console.log(`Email: ${email} & Password: ${password}`);
+    setInfoBox(infoBoxComponent({status:'info', message:'Aguardando o servidor...'}))
     try {
       const response = await registerUser({email, username, password})
       setInfoBox(infoBoxComponent({status: 'success', message: 'Conta criada com sucesso!'}))

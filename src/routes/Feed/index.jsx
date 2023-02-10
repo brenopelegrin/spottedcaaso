@@ -1,14 +1,29 @@
 import SpottedCard from '../../components/SpottedCard';
 import { 
     Flex, 
+    Spinner,
+    Alert,
+    Text,
+    Stack,
+    AlertIcon,
+    AlertDescription,
+    Button,
+    Icon,
   } from '@chakra-ui/react';
 
 import { getFeed } from '../../services/Api';
 
 import { useEffect, useState } from 'react';
 
+import { RxReload } from 'react-icons/rx';
+
 export default function Feed(){
     const [posts, setPosts] = useState(null);
+    async function getPosts2(){
+        const { data: feed } = await getFeed();
+        setPosts(feed.posts)
+    }
+
     useEffect(() => {
         async function getPosts(){
             const { data: feed } = await getFeed();
@@ -16,6 +31,17 @@ export default function Feed(){
         }
         getPosts();
     }, [])
+
+    const loadingSpotteds = () => {
+        return(
+          <Alert status='info' width='sm'>
+            <AlertIcon/>
+            <AlertDescription>
+                Carregando spotteds...
+            </AlertDescription>
+          </Alert>
+        )
+      }
 
     const createPostCards = (posts) => {
         console.log('called createPost')
@@ -38,7 +64,14 @@ export default function Feed(){
 
     return(
         <Flex align="center" gap={4} margin={5} justifyContent="center" flexDirection="column">
-            {posts ? createPostCards(posts) : <SpottedCard text={'posts vazio'}/>}
+            <Button
+                onClick={() => {setPosts(null); getPosts2()}}
+            >
+                <Flex gap={2} flexDirection='row'>
+                    <Icon as={RxReload}/><Text>  Recarregar</Text>
+                </Flex>
+            </Button>
+            {posts ? createPostCards(posts) : loadingSpotteds()}
         </Flex>
     )
 }

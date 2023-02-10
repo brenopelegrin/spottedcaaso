@@ -30,6 +30,7 @@ export default function LoginPage(nextpage) {
 
   const { signed, Login } = useAuth();
   async function handleLogin({email, password}) {
+    setInfoBox(infoBoxComponent({status:'info', message:'Aguardando o servidor...'}))
     const {status, message} = await Login({
       email: email,
       password: password,
