@@ -10,19 +10,46 @@ import {
     Button,
     Heading,
     Text,
+    Alert,
+    AlertIcon,
+    AlertDescription,
     useColorModeValue,
   } from '@chakra-ui/react';
 
 import { useState } from 'react';
-import { Link as RouteLink } from 'react-router-dom';
+import { Link as RouteLink, useNavigate } from 'react-router-dom';
+
+import { registerUser } from '../../services/Api';
   
 export default function SignUpPage() {
   const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const handleSubmit = event => {
+  const [infoBox, setInfoBox] = useState(<></>);
+
+  const navigate = useNavigate();
+
+  const infoBoxComponent = ({status, message}) => {
+    return(
+      <Alert status={status}>
+        <AlertIcon />
+        <AlertDescription>{message}</AlertDescription>
+      </Alert>
+    )
+  }
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
     console.log(`Email: ${email} & Password: ${password}`);
+    try {
+      const response = await registerUser({email, username, password})
+      setInfoBox(infoBoxComponent({status: 'success', message: 'Conta criada com sucesso!'}))
+      navigate('/emailsent');
+    } catch(error) {
+      setInfoBox(infoBoxComponent({status: 'error', message: 'Erro no servidor'}))
+    }
   };
+
   return (
     <Flex
       minH={'80vh'}
@@ -43,6 +70,7 @@ export default function SignUpPage() {
           p={8}>
           <form onSubmit={handleSubmit}>
           <Stack spacing={4}>
+            {infoBox}
             <FormControl isRequired id="email">
               <FormLabel>Email USP</FormLabel>
               <Input 
@@ -50,6 +78,14 @@ export default function SignUpPage() {
                 placeholer='Digite seu email'
                 type="email"
                 onChange={event => setEmail(event.currentTarget.value)} />
+            </FormControl>
+            <FormControl isRequired id="username">
+              <FormLabel>Usuário</FormLabel>
+              <Input 
+                focusBorderColor='yellow.400'
+                placeholer='Digite seu usuário'
+                type="text"
+                onChange={event => setUsername(event.currentTarget.value)} />
             </FormControl>
             <FormControl isRequired id="password">
               <FormLabel>Senha do spotted</FormLabel>

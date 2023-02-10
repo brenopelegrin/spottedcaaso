@@ -8,9 +8,10 @@ import Login from './Login';
 import SignUp from './SignUp';
 import NotFound from './NotFound';
 import EmailSent from './EmailSent';
+import Logout from './Logout';
 
 export default function GetRoutes(){
-  const { signed, Logout } = useAuth();
+  const { signed } = useAuth();
   const navigate = useNavigate();
 
   if (signed){
@@ -20,10 +21,10 @@ export default function GetRoutes(){
             <Route path='*' element={<NotFound />}/>
             <Route exact path="/" element={<Navigate to="/feed"/>}/>
 
-            <Route path='/emailsent' element={<EmailSent/>}/>
             <Route exact path="/feed" element={<Feed/>}/>
             <Route path='/login' element={<Navigate to="/"/>}/>
             <Route path='/signup' element={<Navigate to="/"/>}/>
+            <Route path="/logout" element={<Logout/>}/>
         </Routes>
     )
   } else {
@@ -33,6 +34,7 @@ export default function GetRoutes(){
             <Route path='*' element={<NotFound />}/>
             <Route exact path="/" element={<Navigate to="/feed"/>}/>
 
+            <Route path='/emailsent' element={<EmailSent/>}/>
             <Route exact path="/feed" element={<Login/>}/>
             <Route exact path="/login" element={<Login/>}/>
             <Route exact path="/signup" element={<SignUp/>}/>

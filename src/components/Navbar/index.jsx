@@ -31,7 +31,7 @@ import {
   Hide
 } from '@chakra-ui/react';
 
-import { BiUser } from 'react-icons/bi';
+import { BiUser, BiLogOut } from 'react-icons/bi';
 
 import { 
   HamburgerIcon,
@@ -119,24 +119,29 @@ export default function Navbar() {
           </MenuButton>
           <MenuList>
             <RouteLink to="/profile">
-              <MenuItem>
+              <MenuItem isDisabled>
                 <HStack spacing={2}><Icon as={BiUser}/><Text>Perfil</Text></HStack>
               </MenuItem>
             </RouteLink>
             <RouteLink to="/my">
-              <MenuItem>
+              <MenuItem isDisabled>
                 <HStack spacing={2}><EditIcon/><Text>Meus spotteds</Text></HStack>
               </MenuItem>
             </RouteLink>
             <RouteLink to="/messages">
-              <MenuItem>
+              <MenuItem isDisabled>
                 <HStack spacing={2}><ChatIcon/><Text>Mensagens</Text></HStack>
               </MenuItem>
             </RouteLink>
             <MenuDivider />
             <RouteLink to="/settings">
-              <MenuItem>
+              <MenuItem isDisabled>
                 <HStack spacing={2}><SettingsIcon/><Text>Configurações</Text></HStack>
+              </MenuItem>
+            </RouteLink>
+            <RouteLink to="/logout">
+              <MenuItem>
+                <HStack spacing={2}><Icon as={BiLogOut}/><Text>Sair</Text></HStack>
               </MenuItem>
             </RouteLink>
           </MenuList>
