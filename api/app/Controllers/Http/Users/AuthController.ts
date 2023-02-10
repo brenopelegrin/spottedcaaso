@@ -50,4 +50,24 @@ export default class AuthController {
         .send({ success: false, message: 'you are not logged in or the token is invalid' })
     }
   }
+
+  public async resend({ auth, response }: HttpContextContract) {
+    if (await auth.use('api').check()) {
+      const newUser = await User.findOrFail(auth.user?.id)
+      if (!newUser.isActivated) {
+        Event.emit('new:user', {
+          newUser,
+        })
+        return response.status(200).send({ success: true, message: 'verification mail resend' })
+      } else {
+        return response
+          .status(400)
+          .send({ success: false, message: 'Account was already activated' })
+      }
+    } else {
+      return response
+        .status(400)
+        .send({ success: false, message: 'you are not logged in or the token is invalid' })
+    }
+  }
 }

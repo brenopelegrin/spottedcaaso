@@ -5,7 +5,7 @@ import { column, beforeSave, hasMany, HasMany, BaseModel } from '@ioc:Adonis/Luc
 import Mail from '@ioc:Adonis/Addons/Mail'
 import Env from '@ioc:Adonis/Core/Env'
 import Route from '@ioc:Adonis/Core/Route'
-import Post from 'App/Models/Post'
+import Post from './Post'
 
 export default class User extends BaseModel {
   @column({ isPrimary: true })
@@ -34,6 +34,9 @@ export default class User extends BaseModel {
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   public updatedAt: DateTime
+
+  @hasMany(() => Post)
+  public posts: HasMany<typeof Post>
 
   @beforeSave()
   public static async hashPassword(user: User) {

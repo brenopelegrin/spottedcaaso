@@ -1,0 +1,24 @@
+import axios from 'axios';
+
+const apiUrl = 'http://localhost:3333'
+
+const api = axios.create({
+    baseURL: apiUrl+'/api/v1'
+});
+
+async function getFeed(){
+    const response = await api.get('/protected/feed')
+    return response
+}
+
+async function postSpotted({text}){
+    const response = await api.post('/protected/spotted', {text})
+    return response
+}
+
+async function postAnonymousSpotted({text}){
+    const response = await api.post('/unprotected/spotted', {text})
+    return response
+}
+
+export { api, getFeed, postSpotted, postAnonymousSpotted }; 

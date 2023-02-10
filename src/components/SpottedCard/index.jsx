@@ -23,7 +23,28 @@ import {
 
 import { BiUser, BiFlag, BiLike, BiShare, BiChat, BiCheckShield } from 'react-icons/bi';
 
-export default function SpottedCard(){
+export default function SpottedCard({id, user_id, text, created_at, updated_at, image}){
+    const getImage = (image) => {
+        if(image){
+            return(
+                <Image
+                maxH={40}
+                objectFit='cover'
+                src='https://images.unsplash.com/photo-1531403009284-440f080d1e12?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80'
+                alt='Chakra UI'
+                />
+            )
+        }
+    }
+
+    const getVerifiedIcon = (user) => {
+        if(user){
+            return(
+                <Icon color={useColorModeValue('green.600', 'green.400')} as={BiCheckShield}/>
+            )
+        }
+    }
+
     return(
         <Card maxW='md' size='xm' bg={useColorModeValue('yellow.200', 'yellow.800')}>
         <Stack divider={<StackDivider borderColor={useColorModeValue('blackAlpha.200', 'whiteAlpha.200')} />} margin={3}>
@@ -32,7 +53,7 @@ export default function SpottedCard(){
                     <Avatar name='Anônimo' src='anonymous.jpg' />
                     <Box>
                     <Flex direction="row" gap={1} align="center">
-                        <Heading size='sm'>Anônimo</Heading><Icon color={useColorModeValue('green.600', 'green.400')} as={BiCheckShield}/>
+                        <Heading size='sm'>Anônimo</Heading>{getVerifiedIcon(null)}
                     </Flex>
                     <Text>Curso não identificado</Text>
                     </Box>
@@ -46,17 +67,10 @@ export default function SpottedCard(){
             </Flex>
 
             <Text>
-            With Chakra UI, I wanted to sync the speed of development with the speed
-            of design. I wanted the developer to be just as excited as the designer to
-            create a screen.
+                {text}
             </Text>
+            {getImage(image)}
 
-            <Image
-            maxH={40}
-            objectFit='cover'
-            src='https://images.unsplash.com/photo-1531403009284-440f080d1e12?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80'
-            alt='Chakra UI'
-        />
         <Flex align="center" justify="space-between" flexDirection="row">
             <Button size='sm' flex='1' variant='ghost' leftIcon={<Icon as={BiLike} />}>
             Like

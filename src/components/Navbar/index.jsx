@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { ReactNode, useState } from 'react';
 import {
   Box,
   Flex,
@@ -27,7 +27,8 @@ import {
   ModalHeader,
   ModalFooter,
   ModalBody,
-  ModalCloseButton
+  ModalCloseButton,
+  Hide
 } from '@chakra-ui/react';
 
 import { BiUser } from 'react-icons/bi';
@@ -48,6 +49,10 @@ import Logo from '../Logo'
 
 import { Link as RouteLink } from 'react-router-dom';
 
+import { useAuth } from '../../contexts/AuthContext';
+
+import { postSpotted, postAnonymousSpotted } from '../../services/Api';
+
 const Links = [['Feed', 'feed']];
 
 const NavLink = (props) => (
@@ -62,9 +67,28 @@ const NavLink = (props) => (
 );
 
 export default function Navbar() {
+  const { signed } = useAuth();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { colorMode, toggleColorMode } = useColorMode();
   const { isOpen: isCreatorOpen, onOpen: onCreatorOpen, onClose: onCreatorClose } = useDisclosure();
+  const [spottedText, setSpottedText] = useState('');
+  const [spottedAnonymous, setSpottedAnonymous] = useState(false);
+
+  const handleSpottedSubmit = async (spottedText, spottedAnonymous) => {
+    console.log({text: spottedText, is_anon: spottedAnonymous})
+    var response = {}
+    if(spottedAnonymous){
+      response = await postAnonymousSpotted({ text: spottedText })
+    } else{
+      response = await postSpotted({ text: spottedText })
+    }
+    
+    if(response.status == 200){
+      onCreatorClose()
+      window.location.reload(false)
+    }
+    console.log(response)
+  }
 
   const getThemeIcon = (theme) => {
     if(theme === 'light'){
@@ -75,18 +99,81 @@ export default function Navbar() {
     }
   };
 
+  const getUserMenu = (signed) => {
+    if(signed){
+      return(
+          <Menu>
+          <MenuButton
+            as={Button}
+            rounded={'full'}
+            variant={'link'}
+            cursor={'pointer'}
+            minW={0}>
+            <Avatar
+              size={'sm'}
+              name={'Test User'}
+              src={
+                'anonymous.jpg'
+              }
+            />
+          </MenuButton>
+          <MenuList>
+            <RouteLink to="/profile">
+              <MenuItem>
+                <HStack spacing={2}><Icon as={BiUser}/><Text>Perfil</Text></HStack>
+              </MenuItem>
+            </RouteLink>
+            <RouteLink to="/my">
+              <MenuItem>
+                <HStack spacing={2}><EditIcon/><Text>Meus spotteds</Text></HStack>
+              </MenuItem>
+            </RouteLink>
+            <RouteLink to="/messages">
+              <MenuItem>
+                <HStack spacing={2}><ChatIcon/><Text>Mensagens</Text></HStack>
+              </MenuItem>
+            </RouteLink>
+            <MenuDivider />
+            <RouteLink to="/settings">
+              <MenuItem>
+                <HStack spacing={2}><SettingsIcon/><Text>Configurações</Text></HStack>
+              </MenuItem>
+            </RouteLink>
+          </MenuList>
+        </Menu>
+      )
+    }
+  }
+
+  const getCreateButton = (signed) => {
+    if(signed){
+      return(
+          <Button
+          variant={'solid'}
+          colorScheme={'yellow'}
+          size={'sm'}
+          mr={4}
+          onClick={onCreatorOpen}
+          leftIcon={<AddIcon />}>
+          Criar
+        </Button>
+      )
+    }
+  }
+
   return (
     <>
       <Box bg={useColorModeValue('yellow.200', 'yellow.600')} px={4} boxShadow='sm'>
 
         <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
-          <IconButton
-            size={'md'}
-            icon={isOpen ? <CloseIcon /> : <HamburgerIcon />}
-            aria-label={'Abrir menu'}
-            display={{ md: 'none' }}
-            onClick={isOpen ? onClose : onOpen}
-          />
+          <Hide above='md'>
+            <IconButton
+              size={'md'}
+              icon={isOpen ? <CloseIcon /> : <HamburgerIcon />}
+              aria-label={'Abrir menu'}
+              onClick={isOpen ? onClose : onOpen}
+            />
+          </Hide>
           <HStack spacing={8} alignItems={'center'}>
             <Box>
               <Logo/>
@@ -109,97 +196,68 @@ export default function Navbar() {
             >
               {getThemeIcon(colorMode)}
             </Button>
-            <Button
-              variant={'solid'}
-              colorScheme={'yellow'}
-              size={'sm'}
-              mr={4}
-              onClick={onCreatorOpen}
-              leftIcon={<AddIcon />}>
-              Criar
-            </Button>
-            <Menu>
-              <MenuButton
-                as={Button}
-                rounded={'full'}
-                variant={'link'}
-                cursor={'pointer'}
-                minW={0}>
-                <Avatar
-                  size={'sm'}
-                  name={'Test User'}
-                  src={
-                    'anonymous.jpg'
-                  }
-                />
-              </MenuButton>
-              <MenuList>
-                <RouteLink to="/profile">
-                  <MenuItem>
-                    <HStack spacing={2}><Icon as={BiUser}/><Text>Perfil</Text></HStack>
-                  </MenuItem>
-                </RouteLink>
-                <RouteLink to="/my">
-                  <MenuItem>
-                    <HStack spacing={2}><EditIcon/><Text>Meus spotteds</Text></HStack>
-                  </MenuItem>
-                </RouteLink>
-                <RouteLink to="/messages">
-                  <MenuItem>
-                    <HStack spacing={2}><ChatIcon/><Text>Mensagens</Text></HStack>
-                  </MenuItem>
-                </RouteLink>
-                <MenuDivider />
-                <RouteLink to="/settings">
-                  <MenuItem>
-                    <HStack spacing={2}><SettingsIcon/><Text>Configurações</Text></HStack>
-                  </MenuItem>
-                </RouteLink>
-              </MenuList>
-            </Menu>
+            <Hide below='md'>{getCreateButton(signed)}</Hide>
+            { getUserMenu(signed) }
           </Flex>
         </Flex>
 
         {isOpen ? (
-          <Box pb={4} display={{ md: 'none' }}>
-            <Stack as={'nav'} spacing={4}>
-              {Links.map((link) => (
-                <NavLink key={link}>{link}</NavLink>
-              ))}
-            </Stack>
-          </Box>
+          <Hide above='md'>
+            <Box pb={4}>
+              <Stack as={'nav'} spacing={4}>
+                {Links.map((link) => (
+                  <NavLink key={link}>{link}</NavLink>
+                ))}
+                {getCreateButton(signed)}
+              </Stack>
+            </Box>
+          </Hide>
         ) : null}
       </Box>
 
       <Modal onClose={onCreatorClose} isOpen={isCreatorOpen} isCentered>
       <ModalOverlay />
       <ModalContent>
-            <ModalHeader bg={useColorModeValue('yellow.200', 'yellow.600')}>Criar novo Spotted <ModalCloseButton /></ModalHeader>
+          <ModalHeader bg={useColorModeValue('yellow.200', 'yellow.600')}>Criar novo Spotted <ModalCloseButton /></ModalHeader>
           <ModalBody>
             <Flex flexDirection="column" gap={4} pt={4}>
-              <Textarea placeholder='Digite aqui algo bem curioso...' />
+              <FormControl isRequired id="text">
+                <Textarea 
+                  placeholder='Digite aqui algo bem curioso...' 
+                  onBlur = {event => setSpottedText(event.currentTarget.value)}
+                  />
+              </FormControl>
               <FormControl display='flex' alignItems='center'>
                 <FormLabel htmlFor='is-anonymous' mb='0'>
                   Mensagem anônima
                 </FormLabel>
-                <Switch id='is-anonymous' />
+                <Switch 
+                  disabled
+                  id='is-anonymous'
+                  isChecked={spottedAnonymous}
+                  onChange={() => setSpottedAnonymous(current => !current)}
+                  />
               </FormControl>
             </Flex>
           </ModalBody>
           <ModalFooter>
           <Flex gap={4} flexDirection="row" justify="space-between">
-            <Button onClick={onCreatorClose}>
-              <Flex align="center" flexDirection="row" gap={2}>
-                <SmallCloseIcon/>
-                <Text>Fechar</Text>
-              </Flex>
-            </Button>
-            <Button>
-              <Flex align="center" flexDirection="row" gap={2}>
-              <EditIcon/>
-              <Text>Enviar</Text>
-              </Flex>
-            </Button>
+            <FormControl>
+              <Button id="closeSpottedCreator" onClick={onCreatorClose}>
+                <Flex align="center" flexDirection="row" gap={2}>
+                  <SmallCloseIcon/>
+                  <Text>Fechar</Text>
+                </Flex>
+              </Button>
+            </FormControl>
+            <FormControl>
+              <Button id="sendSpotted" type="button" onClick={() => handleSpottedSubmit(spottedText, spottedAnonymous)}>
+                <Flex align="center" flexDirection="row" gap={2}>
+                <EditIcon/>
+                <Text>Enviar</Text>
+                </Flex>
+              </Button>
+            </FormControl>
           </Flex>
           </ModalFooter>
       </ModalContent>
