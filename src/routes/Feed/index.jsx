@@ -5,11 +5,15 @@ import {
     Alert,
     Text,
     Stack,
+    Box,
     AlertIcon,
     AlertDescription,
     Button,
     Icon,
+    useColorModeValue,
   } from '@chakra-ui/react';
+
+import { Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react'
 
 import { getFeed } from '../../services/Api';
 
@@ -17,61 +21,33 @@ import { useEffect, useState } from 'react';
 
 import { RxReload } from 'react-icons/rx';
 
+import AuthFeed from '../../components/AuthFeed';
+
 export default function Feed(){
-    const [posts, setPosts] = useState(null);
-    async function getPosts2(){
-        const { data: feed } = await getFeed();
-        setPosts(feed.posts)
-    }
-
-    useEffect(() => {
-        async function getPosts(){
-            const { data: feed } = await getFeed();
-            setPosts(feed.posts)
-        }
-        getPosts();
-    }, [])
-
-    const loadingSpotteds = () => {
-        return(
-          <Alert status='info' width='sm'>
-            <AlertIcon/>
-            <AlertDescription>
-                Carregando spotteds...
-            </AlertDescription>
-          </Alert>
-        )
-      }
-
-    const createPostCards = (posts) => {
-        console.log('called createPost')
-        const loadedCards = posts.map((post) => {
-            return(
-                <SpottedCard 
-                id={post.id}
-                user_id={post.user_id}
-                text={post.text}
-                created_at={post.created_at}
-                updated_at={post.updated_at}
-                />
-            )
-        })
-
-        return(
-            loadedCards
-        )
-    }
-
     return(
-        <Flex align="center" gap={4} margin={5} justifyContent="center" flexDirection="column">
-            <Button
-                onClick={() => {setPosts(null); getPosts2()}}
+        <Box 
+            p={4}
+            maxWidth="100%"
+            margin="auto"
+            align="center"  
+            justifyContent="center"
             >
-                <Flex gap={2} flexDirection='row'>
-                    <Icon as={RxReload}/><Text>  Recarregar</Text>
+            <Tabs variant='soft-rounded'>
+            <TabList mb='1em'>
+                <Flex gap={2} align="center" justifyContent="center" margin="auto">
+                    <Tab bg={useColorModeValue('blackAlpha.300', 'blackAlpha.700')} _selected={{ color: 'white', bg: 'yellow.500' }}>Autenticado</Tab>
+                    <Tab isDisabled bg={useColorModeValue('blackAlpha.300', 'blackAlpha.700')} _selected={{ color: 'white', bg: 'yellow.500' }}>Anônimo</Tab>
                 </Flex>
-            </Button>
-            {posts ? createPostCards(posts) : loadingSpotteds()}
-        </Flex>
+            </TabList>
+            <TabPanels>
+                <TabPanel pt={-2}>
+                    <AuthFeed/>
+                </TabPanel>
+                <TabPanel>
+                <p>two!</p>
+                </TabPanel>
+            </TabPanels>
+            </Tabs>
+        </Box>
     )
 }
