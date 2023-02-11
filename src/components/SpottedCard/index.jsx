@@ -46,7 +46,7 @@ export default function SpottedCard({id, user_id, text, created_at, updated_at, 
     }
 
     return(
-        <Card maxW='md' size='xm' bg={useColorModeValue('yellow.200', 'yellow.800')}>
+        <Card maxW='md' size='xm' bg={useColorModeValue('yellow.200', 'yellow.800')} borderRadius={15}>
         <Stack divider={<StackDivider borderColor={useColorModeValue('blackAlpha.200', 'whiteAlpha.200')} />} margin={3}>
             <Flex spacing={2}>
                 <Flex flex='1' gap={3} alignItems='center' flexWrap='wrap'>
