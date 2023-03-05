@@ -36,9 +36,13 @@ export const AuthProvider = ({ children }) => {
         response = await api.post('/auth/login', userData);
     } catch(err){
         console.log(err);
-        return({status: 'error', message: "Erro no servidor"})
+        if (err.response.status === 400 || err.response.status === 401){
+          return({status: 'error', message: "E-mail ou senha incorretos"})
+        } else {
+          return({status: 'error', message: "Erro no servidor"})
+        }
     }
-    if (!response.data.token){
+    if (!response.data.hasOwnProperty('token') && !response.data.token){
         return({status: 'error', message: "Erro no servidor"})
     }
     setSigned(true);

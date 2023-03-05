@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const apiUrl = 'http://localhost:3333'
+const apiUrl = 'https://spottedcaaso-api.onrender.com'
 
 const api = axios.create({
     baseURL: apiUrl+'/api/v1'
