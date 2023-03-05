@@ -6,24 +6,28 @@ import Mail from '@ioc:Adonis/Addons/Mail'
 import Env from '@ioc:Adonis/Core/Env'
 import Route from '@ioc:Adonis/Core/Route'
 import Post from './Post'
+import Comment from './Comment'
 
 export default class User extends BaseModel {
   @column({ isPrimary: true })
   public id: number
 
-  @column()
+  @column({ serializeAs: null })
   public email: string
 
   @column()
   public username: string
 
   @column()
-  public avatar: string
+  public name: string
 
   @column()
+  public avatar: string
+
+  @column({ serializeAs: null })
   public isActivated: boolean = false
 
-  @column.dateTime()
+  @column.dateTime({ serializeAs: null })
   public email_verified_at: DateTime
 
   @column({ serializeAs: null })
@@ -37,6 +41,9 @@ export default class User extends BaseModel {
 
   @hasMany(() => Post)
   public posts: HasMany<typeof Post>
+
+  @hasMany(() => Comment)
+  public comments: HasMany<typeof Comment>
 
   @beforeSave()
   public static async hashPassword(user: User) {

@@ -22,14 +22,14 @@ import Route from '@ioc:Adonis/Core/Route'
 import { rules, schema } from '@ioc:Adonis/Core/Validator'
 import HealthCheck from '@ioc:Adonis/Core/HealthCheck'
 import Post from 'App/Models/Post'
+import Comment from 'App/Models/Comment'
 import AnonPost from 'App/Models/AnonPost'
 import User from 'App/Models/User'
-import { all } from 'proxy-addr'
 
 Route.get('health', async ({ response }) => {
   const report = await HealthCheck.getReport()
 
-  return report.healthy ? response.ok(report) : response.badRequest(report)
+  return report.healthy ? response.ok(report) : response.badRequest({ report: report })
 })
 
 Route.group(() => {
@@ -44,7 +44,7 @@ Route.group(() => {
       })
       response.send({ created: true, post: await AnonPost.find(newPost.id) })
     } catch (error) {
-      response.badRequest(error.messages)
+      response.badRequest({ errors: error.messages })
     }
   })
   Route.get('/spotted/:id', async ({ request, response }) => {
@@ -53,7 +53,7 @@ Route.group(() => {
       const desiredPost = await AnonPost.findOrFail(id)
       response.send({ post: desiredPost })
     } catch (error) {
-      response.badRequest(error.messages)
+      response.badRequest({ errors: error.messages })
     }
   })
   Route.get('feed', async ({ response }) => {
@@ -72,7 +72,11 @@ Route.group(() => {
   })
   Route.get('feed', async ({ auth, response }) => {
     if (await auth.use('api').check()) {
-      const allPosts = await Post.all()
+      const allPosts = await Post.query()
+        .preload('comments', (commentQuery) => {
+          commentQuery.preload('user')
+        })
+        .preload('user')
       response.send({ posts: JSON.parse(JSON.stringify(allPosts)) })
     } else {
       response.send({ authenticated: false })
@@ -82,9 +86,33 @@ Route.group(() => {
     const id = await request.params().id
     try {
       const desiredPost = await Post.findOrFail(id)
-      response.send({ post: desiredPost })
+      const authorUser = await User.findOrFail(desiredPost?.id)
+      response.send({ post: desiredPost, user: authorUser })
     } catch (error) {
-      response.badRequest(error.messages)
+      response.badRequest({ errors: error.messages })
+    }
+  })
+  Route.post('/spotted/:postId/comment', async ({ auth, request, response }) => {
+    const id = await request.params().postId
+    const validations = await schema.create({
+      text: schema.string([rules.maxLength(1024)]),
+    })
+
+    try {
+      // get current User object from authentication
+      const currentUser = await User.findOrFail(auth.user?.id)
+
+      // get Post object from postId param on URL
+      const data = await request.validate({ schema: validations })
+      const desiredPost = await Post.findOrFail(id)
+
+      // create new comment related to the Post object and associate current User with it
+      const newComment = await desiredPost.related('comments').create({ text: data.text })
+      await newComment.related('user').associate(currentUser)
+
+      response.send({ created: true, comment: await Comment.find(newComment.id) })
+    } catch (error) {
+      response.badRequest({ errors: error.messages })
     }
   })
   Route.post('/spotted', async ({ auth, request, response }) => {
@@ -93,12 +121,12 @@ Route.group(() => {
     })
     try {
       const data = await request.validate({ schema: validations })
-      const newPost = await auth.user.related('posts').create({
+      const newPost = await auth.user?.related('posts').create({
         text: data.text,
       })
-      response.send({ created: true, post: await Post.find(newPost.id) })
+      response.send({ created: true, post: await Post.find(newPost?.id) })
     } catch (error) {
-      response.badRequest(error.messages)
+      response.badRequest({ errors: error.messages })
     }
   })
 })

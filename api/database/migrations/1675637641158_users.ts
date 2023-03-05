@@ -8,6 +8,7 @@ export default class extends BaseSchema {
       table.increments('id').primary()
       table.string('email', 255).notNullable()
       table.string('username', 255).notNullable().unique()
+      table.string('name', 255).notNullable()
       table.string('avatar').nullable()
       table.dateTime('email_verified_at').nullable()
       table.boolean('is_activated').notNullable().defaultTo(false)
