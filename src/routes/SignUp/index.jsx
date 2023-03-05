@@ -13,6 +13,7 @@ import {
     Alert,
     AlertIcon,
     AlertDescription,
+    FormErrorMessage,
     useColorModeValue,
   } from '@chakra-ui/react';
 
@@ -20,6 +21,8 @@ import { useState } from 'react';
 import { Link as RouteLink, useNavigate } from 'react-router-dom';
 
 import { registerUser } from '../../services/Api';
+
+import DummyBox from '../../components/DummyBox';
   
 export default function SignUpPage() {
   const [email, setEmail] = useState('');
@@ -58,17 +61,19 @@ export default function SignUpPage() {
       justify={'center'}
       bg={useColorModeValue('gray.50', 'gray.800')}>
       <Stack spacing={8} mx={'auto'} maxW={'lg'} py={12} px={6}>
+        <DummyBox>
         <Stack align={'center'}>
-          <Heading fontSize={'4xl'}>Criar conta</Heading>
-          <Text fontSize={'lg'}>
-            Vamos criar uma conta novinha para você
+          <Heading fontSize={'3xl'}>🚀 Criar conta</Heading>
+          <Text fontSize={'md'}>
+            Vamos criar uma conta novinha para você 
           </Text>
         </Stack>  
+        </DummyBox>
         <Box
           rounded={'lg'}
           bg={useColorModeValue('white', 'gray.700')}
           boxShadow={'lg'}
-          p={8}>
+          p={8}>  
           <form onSubmit={handleSubmit}>
           <Stack spacing={4}>
             {infoBox}
@@ -77,6 +82,7 @@ export default function SignUpPage() {
               <Input 
                 focusBorderColor='yellow.400'
                 placeholer='Digite seu email'
+                background={useColorModeValue('gray.100', 'blackAlpha.300')}
                 type="email"
                 onChange={event => setEmail(event.currentTarget.value)} />
             </FormControl>
@@ -85,6 +91,7 @@ export default function SignUpPage() {
               <Input 
                 focusBorderColor='yellow.400'
                 placeholer='Digite seu usuário'
+                background={useColorModeValue('gray.100', 'blackAlpha.300')}
                 type="text"
                 onChange={event => setUsername(event.currentTarget.value)} />
             </FormControl>
@@ -93,6 +100,7 @@ export default function SignUpPage() {
               <Input
                 focusBorderColor='yellow.400'
                 placeholder='Digite sua senha'
+                background={useColorModeValue('gray.100', 'blackAlpha.300')}
                 type="password"
                 onChange={event => setPassword(event.currentTarget.value)}/>
             </FormControl>

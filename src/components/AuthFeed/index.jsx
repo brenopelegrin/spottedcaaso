@@ -68,9 +68,10 @@ export default function AuthFeed(){
         <Flex align="center" gap={3} justifyContent="center" flexDirection="column">
             <Button
                 onClick={() => {setPosts(null); getPosts2()}}
+                colorScheme="yellow"
             >
                 <Flex gap={2} flexDirection='row'>
-                    <Icon as={RxReload}/><Text>  Recarregar</Text>
+                    <Icon boxSize={4} as={RxReload}/><Text>  Recarregar</Text>
                 </Flex>
             </Button>
             {posts ? createPostCards(posts) : loadingSpotteds()}

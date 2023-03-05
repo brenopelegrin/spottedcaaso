@@ -71,15 +71,15 @@ export default function SpottedCard({id, user_id, text, created_at, updated_at, 
             </Text>
             {getImage(image)}
 
-        <Flex align="center" justify="space-between" flexDirection="row">
-            <Button size='sm' flex='1' variant='ghost' leftIcon={<Icon as={BiLike} />}>
-            Like
+        <Flex align="center" justify="space-between" flexDirection="row" gap={2}>
+            <Button colorScheme="yellow" size='sm' variant='ghost' leftIcon={<Icon boxSize={4} as={BiLike} />}>
+            Up
             </Button>
-            <Button size='sm' flex='1' variant='ghost' leftIcon={<Icon as={BiChat} />}>
-            Comment
+            <Button colorScheme="yellow" size='sm' variant='ghost' leftIcon={<Icon boxSize={4} as={BiChat} />}>
+            Comentar
             </Button>
-            <Button size='sm' flex='1' variant='ghost' leftIcon={<Icon as={BiShare} />}>
-            Share
+            <Button colorScheme="yellow" size='sm' variant='ghost' leftIcon={<Icon boxSize={4} as={BiShare} />}>
+            Enviar
             </Button>
         </Flex>
         </Stack>

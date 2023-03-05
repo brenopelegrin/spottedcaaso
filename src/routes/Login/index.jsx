@@ -17,6 +17,8 @@ import {
     AlertDescription,
   } from '@chakra-ui/react';
 
+import DummyBox from '../../components/DummyBox';
+
 import { useState, useContext } from 'react';
 import { Link as RouteLink } from 'react-router-dom';
 
@@ -45,25 +47,28 @@ export default function LoginPage(nextpage) {
 
   const infoBoxComponent = ({status, message}) => {
     return(
-      <Alert status={status}>
+      <Alert status={status} borderRadius={15}>
         <AlertIcon />
         <AlertDescription>{message}</AlertDescription>
       </Alert>
     )
   }
   return (
+
     <Flex
       minH={'80vh'}
       align={'center'}
       justify={'center'}
       bg={useColorModeValue('gray.50', 'gray.800')}>
       <Stack spacing={8} mx={'auto'} maxW={'lg'} py={12} px={6}>
+        <DummyBox>
         <Stack align={'center'}>
-          <Heading fontSize={'4xl'}>Entre na sua conta</Heading>
-          <Text fontSize={'lg'}>
-            Ainda não tem uma conta? <Link color={useColorModeValue('yellow.600', 'yellow.400')}><RouteLink to="/signup">Clique para criar uma</RouteLink></Link> ✌️
+          <Heading fontSize={'3xl'}>Entre na sua conta</Heading>
+          <Text fontSize={'md '}>
+            Ainda não tem uma? <Link color={useColorModeValue('yellow.600', 'yellow.400')}><RouteLink to="/signup">Clique aqui para criar</RouteLink></Link> ✌️
           </Text>
         </Stack>  
+        </DummyBox>
         <Box
           rounded={'lg'}
           bg={useColorModeValue('white', 'gray.700')}
@@ -76,6 +81,7 @@ export default function LoginPage(nextpage) {
               <FormLabel>Email USP</FormLabel>
               <Input 
                 focusBorderColor='yellow.400'
+                background={useColorModeValue('gray.100', 'blackAlpha.300')}
                 placeholer='Digite seu email'
                 type="email"
                 onChange={event => setEmail(event.currentTarget.value)} />
@@ -85,6 +91,7 @@ export default function LoginPage(nextpage) {
               <Input
                 focusBorderColor='yellow.400'
                 placeholder='Digite sua senha'
+                background={useColorModeValue('gray.100', 'blackAlpha.300')}
                 type="password"
                 onChange={event => setPassword(event.currentTarget.value)}/>
             </FormControl>

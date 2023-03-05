@@ -5,6 +5,7 @@ import {
   Avatar,
   FormControl,
   FormLabel,
+  Center,
   Switch,
   HStack,
   Text,
@@ -187,9 +188,21 @@ export default function Navbar() {
 
         <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
           <Hide above='md'>
+            <IconButton 
+              position="fixed"
+              background={useColorModeValue('yellow.400', 'yellow.700')}
+              bottom="20px"
+              right="20px"
+              borderRadius="50%"
+              size="lg"
+              onClick={onCreatorOpen}
+              >
+              <AddIcon boxSize={5}/>
+            </IconButton>
             <IconButton
               size={'md'}
               icon={isOpen ? <CloseIcon /> : <HamburgerIcon />}
+              colorScheme="yellow"
               aria-label={'Abrir menu'}
               onClick={isOpen ? onClose : onOpen}
             />
