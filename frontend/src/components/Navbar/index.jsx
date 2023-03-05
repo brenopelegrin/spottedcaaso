@@ -202,7 +202,7 @@ export default function Navbar() {
 
         <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
           <Hide above='md'>
-            <IconButton 
+            {signed ? <IconButton 
               position="fixed"
               background={useColorModeValue('yellow.500', 'yellow.100')}
               bottom="20px"
@@ -216,7 +216,7 @@ export default function Navbar() {
               onClick={onCreatorOpen}
               >
               <AddIcon boxSize="50%"/>
-            </IconButton>
+            </IconButton> : null}
             <IconButton
               size={'md'}
               icon={isOpen ? <CloseIcon /> : <HamburgerIcon />}
