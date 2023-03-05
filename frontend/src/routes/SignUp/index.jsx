@@ -35,7 +35,7 @@ export default function SignUpPage() {
 
   const infoBoxComponent = ({status, message}) => {
     return(
-      <Alert status={status}>
+      <Alert status={status} borderRadius={15}>
         <AlertIcon />
         <AlertDescription>{message}</AlertDescription>
       </Alert>

@@ -36,7 +36,7 @@ export default function AuthFeed(){
 
     const loadingSpotteds = () => {
         return(
-          <Alert status='info' width='sm' borderRadius={15}>
+          <Alert status='info' borderRadius={15}>
             <AlertIcon/>
             <AlertDescription>
                 Carregando spotteds...
