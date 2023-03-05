@@ -10,6 +10,7 @@ export default class AuthController {
       email: schema.string({}, [rules.email(), rules.unique({ table: 'users', column: 'email' })]),
       password: schema.string({}, [rules.confirmed()]),
       username: schema.string({}, [rules.unique({ table: 'users', column: 'username' })]),
+      name: schema.string({}, [rules.maxLength(255)]),
     })
     const data = await request.validate({ schema: validations })
     const newUser = await User.create(data)

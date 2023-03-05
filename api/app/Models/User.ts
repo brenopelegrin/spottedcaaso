@@ -24,7 +24,7 @@ export default class User extends BaseModel {
   @column()
   public avatar: string
 
-  @column({ serializeAs: null })
+  @column()
   public isActivated: boolean = false
 
   @column.dateTime({ serializeAs: null })

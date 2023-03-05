@@ -23,7 +23,7 @@ import {
 
 import { BiUser, BiFlag, BiLike, BiShare, BiChat, BiCheckShield } from 'react-icons/bi';
 
-export default function SpottedCard({id, user_id, text, created_at, updated_at, image}){
+export default function SpottedCard({id, user_id, text, created_at, updated_at, image, user, comments}){
     const getImage = (image) => {
         if(image){
             return(
@@ -38,9 +38,9 @@ export default function SpottedCard({id, user_id, text, created_at, updated_at, 
     }
 
     const getVerifiedIcon = (user) => {
-        if(user){
+        if(user.is_activated){
             return(
-                <Icon color={useColorModeValue('green.600', 'green.400')} as={BiCheckShield}/>
+                <Icon boxSize={4} color={useColorModeValue('green.600', 'green.400')} as={BiCheckShield}/>
             )
         }
     }
@@ -53,15 +53,15 @@ export default function SpottedCard({id, user_id, text, created_at, updated_at, 
                     <Avatar name='Anônimo' src='anonymous.jpg' />
                     <Box>
                     <Flex direction="row" gap={1} align="center">
-                        <Heading size='sm'>Anônimo</Heading>{getVerifiedIcon(null)}
+                        <Heading size='sm'>Anônimo</Heading>{getVerifiedIcon({is_activated: true})}
                     </Flex>
                     <Text>Curso não identificado</Text>
                     </Box>
                 </Flex>
                 <IconButton
                     variant='ghost'
-                    colorScheme='gray'
-                    aria-label='See menu'
+                    colorScheme='yellow'
+                    aria-label='Reportar'
                     icon={<Icon as={BiFlag} />}
                 />
             </Flex>
@@ -73,10 +73,10 @@ export default function SpottedCard({id, user_id, text, created_at, updated_at, 
 
         <Flex align="center" justify="space-between" flexDirection="row" gap={2}>
             <Button colorScheme="yellow" size='sm' variant='ghost' leftIcon={<Icon boxSize={4} as={BiLike} />}>
-            Up
+            Gostei
             </Button>
             <Button colorScheme="yellow" size='sm' variant='ghost' leftIcon={<Icon boxSize={4} as={BiChat} />}>
-            Comentar
+            Comentários
             </Button>
             <Button colorScheme="yellow" size='sm' variant='ghost' leftIcon={<Icon boxSize={4} as={BiShare} />}>
             Enviar
