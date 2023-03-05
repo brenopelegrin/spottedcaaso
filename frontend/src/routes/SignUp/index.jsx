@@ -26,6 +26,7 @@ import DummyBox from '../../components/DummyBox';
   
 export default function SignUpPage() {
   const [email, setEmail] = useState('');
+  const [name, setName] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [infoBox, setInfoBox] = useState(<></>);
@@ -43,10 +44,9 @@ export default function SignUpPage() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log(`Email: ${email} & Password: ${password}`);
     setInfoBox(infoBoxComponent({status:'info', message:'Aguardando o servidor...'}))
     try {
-      const response = await registerUser({email, username, password})
+      const response = await registerUser({email, name, username, password})
       setInfoBox(infoBoxComponent({status: 'success', message: 'Conta criada com sucesso!'}))
       navigate('/emailsent');
     } catch(error) {
@@ -85,6 +85,15 @@ export default function SignUpPage() {
                 background={useColorModeValue('gray.100', 'blackAlpha.300')}
                 type="email"
                 onChange={event => setEmail(event.currentTarget.value)} />
+            </FormControl>
+            <FormControl isRequired id="name">
+              <FormLabel>Seu nome</FormLabel>
+              <Input 
+                focusBorderColor='yellow.400'
+                placeholer='Digite seu nome'
+                background={useColorModeValue('gray.100', 'blackAlpha.300')}
+                type="text"
+                onChange={event => setName(event.currentTarget.value)} />
             </FormControl>
             <FormControl isRequired id="username">
               <FormLabel>Usuário</FormLabel>

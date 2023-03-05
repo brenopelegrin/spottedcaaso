@@ -81,10 +81,21 @@ export default function Navbar() {
 
   const waitingServer = () => {
     return(
-      <Alert status='info' width='sm'>
+      <Alert status='info' borderRadius={15}>
         <AlertIcon/>
         <AlertDescription>
             Aguardando o servidor...
+        </AlertDescription>
+      </Alert>
+    )
+  }
+
+  const serverError = () => {
+    return(
+      <Alert status='error' borderRadius={15}>
+        <AlertIcon/>
+        <AlertDescription>
+            Erro no servidor!
         </AlertDescription>
       </Alert>
     )
@@ -102,6 +113,9 @@ export default function Navbar() {
     
     if(response.status == 200){
       onCreatorClose()
+      setInfoBox(<></>)
+    } else {
+      setInfoBox(serverError())
     }
     console.log(response)
   }
@@ -190,14 +204,18 @@ export default function Navbar() {
           <Hide above='md'>
             <IconButton 
               position="fixed"
-              background={useColorModeValue('yellow.400', 'yellow.700')}
+              background={useColorModeValue('yellow.500', 'yellow.100')}
               bottom="20px"
               right="20px"
               borderRadius="50%"
-              size="lg"
+              colorScheme="yellow"
+              shadow="xl"
+              width="50px"
+              height="50px"
+              zIndex="1000"
               onClick={onCreatorOpen}
               >
-              <AddIcon boxSize={5}/>
+              <AddIcon boxSize="50%"/>
             </IconButton>
             <IconButton
               size={'md'}

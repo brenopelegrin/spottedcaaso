@@ -36,7 +36,7 @@ export default function AuthFeed(){
 
     const loadingSpotteds = () => {
         return(
-          <Alert status='info' width='sm'>
+          <Alert status='info' width='sm' borderRadius={15}>
             <AlertIcon/>
             <AlertDescription>
                 Carregando spotteds...
@@ -46,7 +46,6 @@ export default function AuthFeed(){
       }
 
     const createPostCards = (posts) => {
-        console.log('called createPost')
         const loadedCards = posts.map((post) => {
             return(
                 <SpottedCard 
@@ -55,6 +54,8 @@ export default function AuthFeed(){
                 text={post.text}
                 created_at={post.created_at}
                 updated_at={post.updated_at}
+                user={post.user}
+                comments={post.comments}
                 />
             )
         })

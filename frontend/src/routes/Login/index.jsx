@@ -42,7 +42,6 @@ export default function LoginPage(nextpage) {
 
   const handleSubmit = event => {
     event.preventDefault();
-    console.log(`Email: ${email} & Password: ${password}`);
   };
 
   const infoBoxComponent = ({status, message}) => {
