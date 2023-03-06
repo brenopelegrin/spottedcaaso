@@ -33,9 +33,9 @@ export default function SignUpPage() {
 
   const navigate = useNavigate();
 
-  const infoBoxComponent = ({status, message}) => {
+  const infoBoxComponent = ({status, message, key}, props) => {
     return(
-      <Alert status={status} borderRadius={15}>
+      <Alert key={key ? key : null} status={status} borderRadius={15}>
         <AlertIcon />
         <AlertDescription>{message}</AlertDescription>
       </Alert>
@@ -50,7 +50,24 @@ export default function SignUpPage() {
       setInfoBox(infoBoxComponent({status: 'success', message: 'Conta criada com sucesso!'}))
       navigate('/emailsent');
     } catch(error) {
-      setInfoBox(infoBoxComponent({status: 'error', message: 'Erro no servidor'}))
+      const errorBoxes = [];
+      if(error.response.data.hasOwnProperty('errors')){
+        const errors = error.response.data.errors;
+        errors.map( (error, index) => {
+          if(error.hasOwnProperty('rule') && error.rule === 'unique'){
+            if(error.field === 'email'){
+              errorBoxes.push(infoBoxComponent({key: index, status: 'error', message: 'Já existe uma conta com esse email'}))
+            }
+            if(error.field === 'username'){
+              errorBoxes.push(infoBoxComponent({key: index, status: 'error', message: 'Já existe uma conta com esse nome de usuário'}))
+            }
+          }
+        })
+      }
+      setInfoBox(
+        <Flex direction="column" gap={4}>
+          {errorBoxes}
+        </Flex>)
     }
   };
 
