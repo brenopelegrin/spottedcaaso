@@ -51,7 +51,8 @@ export default function SignUpPage() {
       navigate('/emailsent');
     } catch(error) {
       const errorBoxes = [];
-      if(error.response.data.hasOwnProperty('errors')){
+      console.log(error)
+      if(error.hasOwnProperty('response') && error.response.data.hasOwnProperty('errors')){
         const errors = error.response.data.errors;
         errors.map( (error, index) => {
           if(error.hasOwnProperty('rule') && error.rule === 'unique'){
@@ -63,6 +64,13 @@ export default function SignUpPage() {
             }
           }
         })
+      } else {
+        if(error.code === "ERR_NETWORK"){
+          errorBoxes.push(infoBoxComponent({status: 'error', message: 'Erro de conexão'}))
+        } else {
+          errorBoxes.push(infoBoxComponent({status: 'error', message: 'Erro no servidor'}))
+        }
+        
       }
       setInfoBox(
         <Flex direction="column" gap={4}>
