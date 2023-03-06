@@ -9,6 +9,7 @@ import SignUp from './SignUp';
 import NotFound from './NotFound';
 import EmailSent from './EmailSent';
 import Logout from './Logout';
+import Profile from './Profile';
 
 export default function GetRoutes(){
   const { signed } = useAuth();
@@ -22,6 +23,8 @@ export default function GetRoutes(){
             <Route exact path="/" element={<Navigate to="/feed"/>}/>
 
             <Route exact path="/feed" element={<Feed/>}/>
+            <Route exact path="/profile" element={<Profile/>}/>
+
             <Route path='/login' element={<Navigate to="/"/>}/>
             <Route path='/signup' element={<Navigate to="/"/>}/>
             <Route path="/logout" element={<Logout/>}/>

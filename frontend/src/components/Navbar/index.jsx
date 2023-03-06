@@ -51,7 +51,7 @@ import {
 } from '@chakra-ui/icons';
 import Logo from '../Logo'
 
-import { Link as RouteLink } from 'react-router-dom';
+import { Link as RouteLink, useLocation } from 'react-router-dom';
 
 import { useAuth } from '../../contexts/AuthContext';
 
@@ -78,6 +78,8 @@ export default function Navbar() {
   const [spottedText, setSpottedText] = useState('');
   const [spottedAnonymous, setSpottedAnonymous] = useState(false);
   const [infoBox, setInfoBox] = useState(<></>);
+
+  const currentLocation = useLocation();
 
   const waitingServer = () => {
     return(
@@ -195,14 +197,13 @@ export default function Navbar() {
       )
     }
   }
-
   return (
     <>
       <Box bg={useColorModeValue('yellow.200', 'yellow.600')} px={4} boxShadow='sm'>
 
         <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
           <Hide above='md'>
-            {signed ? <IconButton 
+            {signed && currentLocation.pathname === '/feed' ? <IconButton 
               position="fixed"
               background={useColorModeValue('yellow.500', 'yellow.100')}
               bottom="20px"
