@@ -17,7 +17,7 @@ async function postSpotted({text}){
 }
 
 async function postAnonymousSpotted({text}){
-    const response = await api.post('/unprotected/spotted', {text})
+    const response = await api.post('/unprotected/spotted', {text}) 
     return response
 }
 
