@@ -7,6 +7,8 @@ import Env from '@ioc:Adonis/Core/Env'
 import Route from '@ioc:Adonis/Core/Route'
 import Post from './Post'
 import Comment from './Comment'
+import PostVote from './PostVote'
+import PostReport from './PostReport'
 
 export default class User extends BaseModel {
   @column({ isPrimary: true })
@@ -44,6 +46,12 @@ export default class User extends BaseModel {
 
   @hasMany(() => Comment)
   public comments: HasMany<typeof Comment>
+
+  @hasMany(() => PostVote)
+  public postVotes: HasMany<typeof PostVote>
+
+  @hasMany(() => PostReport)
+  public postReports: HasMany<typeof PostReport>
 
   @beforeSave()
   public static async hashPassword(user: User) {

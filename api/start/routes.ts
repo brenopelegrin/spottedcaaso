@@ -25,6 +25,8 @@ import Post from 'App/Models/Post'
 import Comment from 'App/Models/Comment'
 import AnonPost from 'App/Models/AnonPost'
 import User from 'App/Models/User'
+import PostVote from 'App/Models/PostVote'
+import PostReport from 'App/Models/PostReport'
 
 Route.get('health', async ({ response }) => {
   const report = await HealthCheck.getReport()
@@ -73,10 +75,12 @@ Route.group(() => {
   Route.get('feed', async ({ auth, response }) => {
     if (await auth.use('api').check()) {
       const allPosts = await Post.query()
+        .orderBy('created_at', 'desc')
         .preload('comments', (commentQuery) => {
           commentQuery.preload('user')
         })
         .preload('user')
+        .preload('postVotes')
       response.send({ posts: JSON.parse(JSON.stringify(allPosts)) })
     } else {
       response.send({ authenticated: false })
@@ -86,8 +90,9 @@ Route.group(() => {
     const id = await request.params().id
     try {
       const desiredPost = await Post.findOrFail(id)
-      const authorUser = await User.findOrFail(desiredPost?.id)
-      response.send({ post: desiredPost, user: authorUser })
+      const authorUser = await User.findOrFail(desiredPost?.userId)
+      const postVotes = await desiredPost.related('postVotes').query().select('*')
+      response.send({ post: desiredPost, user: authorUser, postVotes: postVotes })
     } catch (error) {
       response.badRequest({ errors: error.messages })
     }
@@ -111,6 +116,64 @@ Route.group(() => {
       await newComment.related('user').associate(currentUser)
 
       response.send({ created: true, comment: await Comment.find(newComment.id) })
+    } catch (error) {
+      response.badRequest({ errors: error.messages })
+    }
+  })
+  Route.post('/spotted/:postId/vote', async ({ auth, request, response }) => {
+    const id = await request.params().postId
+
+    try {
+      // get current User object from authentication
+      const currentUser = await User.findOrFail(auth.user?.id)
+
+      // get Post object from postId param on URL
+      const desiredPost = await Post.findOrFail(id)
+      const userVotesOnPost = await desiredPost
+        .related('postVotes')
+        .query()
+        .where('user_id', currentUser.id)
+
+      const isVoted = userVotesOnPost?.length > 0
+      // create new vote related to the Post object and associate current User with it
+      if (!isVoted) {
+        const newVote = await desiredPost.related('postVotes').create({})
+        await newVote.related('user').associate(currentUser)
+        response.send({ created: true, vote: await PostVote.find(newVote.id) })
+      } else {
+        response.status(403).send({ errors: 'user has alredy voted in this post' })
+      }
+    } catch (error) {
+      response.badRequest({ errors: error.messages })
+    }
+  })
+  Route.post('/spotted/:postId/report', async ({ auth, request, response }) => {
+    const id = await request.params().postId
+    const validations = await schema.create({
+      text: schema.string([rules.maxLength(1024)]),
+    })
+
+    try {
+      const data = await request.validate({ schema: validations })
+      // get current User object from authentication
+      const currentUser = await User.findOrFail(auth.user?.id)
+
+      // get Post object from postId param on URL
+      const desiredPost = await Post.findOrFail(id)
+      const userReportsOnPost = await desiredPost
+        .related('postReports')
+        .query()
+        .where('user_id', currentUser.id)
+
+      const isReported = userReportsOnPost?.length > 0
+      // create new report related to the Post object and associate current User with it
+      if (!isReported) {
+        const newReport = await desiredPost.related('postReports').create({ text: data.text })
+        await newReport.related('user').associate(currentUser)
+        response.send({ created: true, report: await PostReport.find(newReport.id) })
+      } else {
+        response.status(403).send({ errors: 'user has alredy reported this post' })
+      }
     } catch (error) {
       response.badRequest({ errors: error.messages })
     }

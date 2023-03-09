@@ -51,7 +51,7 @@ import {
 } from '@chakra-ui/icons';
 import Logo from '../Logo'
 
-import { Link as RouteLink, useLocation } from 'react-router-dom';
+import { Link as RouteLink, useLocation, useNavigate } from 'react-router-dom';
 
 import { useAuth } from '../../contexts/AuthContext';
 
@@ -61,7 +61,8 @@ const Links = [['Feed', 'feed']];
 
 const NavLink = (props) => (
   <Button
-    size={'sm'}
+    size='sm'
+    width='ful'
     mr={4}
     colorScheme={'yellow'}
     rounded={'md'}
@@ -103,8 +104,9 @@ export default function Navbar() {
     )
   }
 
+  const navigate = useNavigate();
+
   async function handleSpottedSubmit(spottedText, spottedAnonymous){
-    console.log({text: spottedText, is_anon: spottedAnonymous})
     var response = {}
     setInfoBox(waitingServer())
     if(spottedAnonymous){
@@ -114,12 +116,12 @@ export default function Navbar() {
     }
     
     if(response.status == 200){
-      onCreatorClose()
-      setInfoBox(<></>)
+      onCreatorClose();
+      setInfoBox(<></>);
+      navigate('/');
     } else {
       setInfoBox(serverError())
     }
-    console.log(response)
   }
 
   const getThemeIcon = (theme) => {
@@ -219,8 +221,8 @@ export default function Navbar() {
               <AddIcon boxSize="50%"/>
             </IconButton> : null}
             <IconButton
-              size={'md'}
-              icon={isOpen ? <CloseIcon /> : <HamburgerIcon />}
+              size={'sm'}
+              icon={isOpen ? <CloseIcon/> : <HamburgerIcon />}
               colorScheme="yellow"
               aria-label={'Abrir menu'}
               onClick={isOpen ? onClose : onOpen}
@@ -260,7 +262,6 @@ export default function Navbar() {
                 {Links.map((link) => (
                   <NavLink key={link}>{link}</NavLink>
                 ))}
-                {getCreateButton(signed)}
               </Stack>
             </Box>
           </Hide>

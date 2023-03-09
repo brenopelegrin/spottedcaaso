@@ -21,8 +21,23 @@ async function postAnonymousSpotted({text}){
     return response
 }
 
+async function postProtectedSpottedComment({spottedId, text}){
+    const response = await api.post('/protected/spotted/'+String(spottedId)+'/comment', {text}) 
+    return response
+}
+
+async function postProtectedSpottedVote({spottedId, text}){
+    const response = await api.post('/protected/spotted/'+String(spottedId)+'/vote') 
+    return response
+}
+
+async function postProtectedSpottedReport({spottedId, text}){
+    const response = await api.post('/protected/spotted/'+String(spottedId)+'/report', {text}) 
+    return response
+}
+
 async function registerUser({email, name, username, password}){
     const response = await api.post('/auth/register', {email, name, username, password, password_confirmation: password })
 }
 
-export { api, getFeed, postSpotted, postAnonymousSpotted, registerUser }; 
+export { api, getFeed, postSpotted, postAnonymousSpotted, postProtectedSpottedVote, postProtectedSpottedComment, postProtectedSpottedReport, registerUser }; 

@@ -2,6 +2,8 @@ import { DateTime } from 'luxon'
 import { BaseModel, column, belongsTo, BelongsTo, hasMany, HasMany } from '@ioc:Adonis/Lucid/Orm'
 import User from './User'
 import Comment from './Comment'
+import PostVote from './PostVote'
+import PostReport from './PostReport'
 
 export default class Post extends BaseModel {
   @column({ isPrimary: true })
@@ -24,4 +26,10 @@ export default class Post extends BaseModel {
 
   @hasMany(() => Comment)
   public comments: HasMany<typeof Comment>
+
+  @hasMany(() => PostVote)
+  public postVotes: HasMany<typeof PostVote>
+
+  @hasMany(() => PostReport)
+  public postReports: HasMany<typeof PostReport>
 }
