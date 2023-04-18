@@ -9,7 +9,6 @@ import Post from './Post'
 import Comment from './Comment'
 import PostVote from './PostVote'
 import PostReport from './PostReport'
-
 export default class User extends BaseModel {
   @column({ isPrimary: true })
   public id: number
@@ -25,6 +24,15 @@ export default class User extends BaseModel {
 
   @column()
   public avatar: string
+
+  @column({ serializeAs: null })
+  public major: string
+
+  @column({ serializeAs: null })
+  public showMajor: boolean = false
+
+  @column()
+  public description: string
 
   @column()
   public isActivated: boolean = false

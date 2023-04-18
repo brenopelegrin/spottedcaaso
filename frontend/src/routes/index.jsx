@@ -11,6 +11,7 @@ import EmailSent from './EmailSent';
 import EmailVerified from './EmailVerified';
 import Logout from './Logout';
 import Profile from './Profile';
+import LandingPage from './Landing';
 
 export default function GetRoutes(){
   const { signed } = useAuth();
@@ -36,7 +37,7 @@ export default function GetRoutes(){
     return(
         <Routes>
             <Route path='*' element={<NotFound />}/>
-            <Route exact path="/" element={<Navigate to="/feed"/>}/>
+            <Route exact path="/" element={<LandingPage/>}/>
 
             <Route exact path='/emailsent' element={<EmailSent/>}/>
             <Route exact path='/emailverified' element={<EmailVerified/>}/>
