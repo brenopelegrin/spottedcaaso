@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const apiUrl = 'http://localhost:3333'
+const apiUrl = 'https://spottedcaaso-api.onrender.com'
 
 const api = axios.create({
     baseURL: apiUrl+'/api/v1'
@@ -40,4 +40,13 @@ async function registerUser({email, name, username, password}){
     const response = await api.post('/auth/register', {email, name, username, password, password_confirmation: password })
 }
 
-export { api, getFeed, postSpotted, postAnonymousSpotted, postProtectedSpottedVote, postProtectedSpottedComment, postProtectedSpottedReport, registerUser }; 
+export {
+  api,
+  getFeed,
+  postAnonymousSpotted,
+  postProtectedSpottedComment,
+  postProtectedSpottedReport,
+  postProtectedSpottedVote,
+  postSpotted,
+  registerUser,
+};
